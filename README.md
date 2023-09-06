@@ -3,8 +3,8 @@
 	- admin
 	- student
 
-- user
-	- scores
+- exams 
+	- grade
+		- user
 		- degree
-		- photo
-		- status (faild, succeed)
+		- paper

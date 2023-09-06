@@ -4,60 +4,27 @@
 extern crate lazy_static;
 #[macro_use]
 extern crate serde_with;
+#[macro_use]
+extern crate actix_web;
 
-use sqlx::{Pool, Postgres,error::Error as sqlxError};
-use actix_web::{post, web, App, Error, HttpServer};
-use serde::Deserialize;
-use structures::{Base, User, Session};
+use actix_web_lab::middleware::{from_fn, Next};
 
+use actix_web::{
+    body::MessageBody,
+    dev::{Service, ServiceRequest, ServiceResponse},
+    web, App, Error, HttpServer,
+};
+use sqlx::{Pool, Postgres};
+use structures::Session;
+
+use crate::structures::Base;
+
+mod appstate;
+mod routes;
 mod structures;
 mod utils;
-
 static POOL: std::sync::OnceLock<Pool<Postgres>> = std::sync::OnceLock::new();
 
-#[derive(Deserialize)]
-struct RegisterReq {
-    display_name: String,
-    username: String,
-    password: String,
-}
-
-#[post("/register")]
-async fn register(req_body: String) -> Result<String, Error> {
-    let json: RegisterReq = serde_json::from_str(&req_body)?;
-    let user = User::new(json.display_name, json.username, json.password);
-    let res = user.insert().await;
-    if let Err(err) = res {
-        match err {
-            sqlxError::Database(err) if err.code().unwrap_or_default() == "23505" => {
-                return Err(actix_web::error::ErrorBadRequest("User already exists."))
-            }
-            _ => {}
-        }
-        return Err(actix_web::error::ErrorBadRequest("Something went wrong!"));
-    }
-    Ok("User created!".into())
-}
-
-#[derive(Deserialize)]
-struct LoginReq {
-    username: String,
-    password: String,
-}
-
-#[post("/login")]
-async fn login(req_body: String) -> Result<String, Error> {
-    let json: LoginReq = serde_json::from_str(&req_body)?;
-    let user = User::find_one("username = $1", vec![json.username]).await.map_err(|_| actix_web::error::ErrorUnauthorized("Unauthorized"))?;
-    if user.password_hash == json.password {
-        let session = Session::new(user.id);
-        return Ok(session.token);
-    }
-    Err(actix_web::error::ErrorUnauthorized("Unauthorized"))
-}
-
-struct AppState {}
-//
 #[tokio::main]
 async fn main() -> Result<(), std::io::Error> {
     // std::env::set_var("RUST_LOG", "debug");
@@ -75,13 +42,32 @@ async fn main() -> Result<(), std::io::Error> {
         .expect("Failed to run the migration");
     POOL.set(pool).expect("couldn't asign the pool to global");
     println!("server is running!");
+    use routes::{get_user, login, register};
     HttpServer::new(move || {
         App::new()
-            .app_data(web::Data::new(AppState {}))
-            .service(register)
-            .service(login)
+            .app_data(web::Data::new(appstate::new()))
+            .service(web::scope("/auth").service(login).service(register))
+            .service(
+                web::scope("/user")
+                    .wrap(from_fn(authorization))
+                    .service(get_user),
+            )
     })
     .bind(("127.0.0.1", 8080))?
     .run()
     .await
+}
+
+async fn authorization(
+    req: ServiceRequest,
+    next: Next<impl MessageBody>,
+) -> Result<ServiceResponse<impl MessageBody>, Error> {
+    let auth = req.headers().get("Authorization");
+    if let Some(session) = auth.map(|c| c.to_str().unwrap()) {
+        Session::find_one("token = $1", vec![session])
+            .await
+            .map_err(|_| actix_web::error::ErrorUnauthorized("Unauthorized."))?;
+    }
+    let res = next.call(req).await?;
+    Ok(res)
 }

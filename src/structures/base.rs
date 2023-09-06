@@ -1,4 +1,5 @@
 use crate::POOL;
+use crate::utils::Snowflake;
 use async_trait::async_trait;
 use sqlx::postgres::{PgDatabaseError, PgRow};
 use sqlx::Encode;
@@ -111,5 +112,8 @@ where
             .fetch_one(Self::pool())
             .await?;
         Ok(data)
+    }
+    async fn find_by_id(id: Snowflake) -> Result<Self, sqlx::Error> {
+        Self::find_one("WHERE id = $1", vec![id]).await
     }
 }

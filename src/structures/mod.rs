@@ -1,6 +1,10 @@
 mod base;
 mod user;
 mod session;
+mod exam;
+mod grade;
+pub use grade::Grade;
 pub use session::Session;
+pub use exam::Exam;
 pub use user::User;
 pub use base::Base;
