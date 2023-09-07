@@ -42,15 +42,22 @@ async fn main() -> Result<(), std::io::Error> {
         .expect("Failed to run the migration");
     POOL.set(pool).expect("couldn't asign the pool to global");
     println!("server is running!");
-    use routes::{get_user, login, register};
+    use routes::*;
     HttpServer::new(move || {
         App::new()
             .app_data(web::Data::new(appstate::new()))
             .service(web::scope("/auth").service(login).service(register))
             .service(
-                web::scope("/user")
+                web::scope("/exams")
                     .wrap(from_fn(authorization))
-                    .service(get_user),
+                    .service(create_exam)
+                    .service(get_exams)
+                    .service(add_grade),
+            )
+            .service(
+                web::scope("/user")
+                .wrap(from_fn(authorization))
+                .service(get_user)
             )
     })
     .bind(("127.0.0.1", 8080))?
@@ -67,7 +74,8 @@ async fn authorization(
         Session::find_one("token = $1", vec![session])
             .await
             .map_err(|_| actix_web::error::ErrorUnauthorized("Unauthorized."))?;
+        let res = next.call(req).await?;
+        return Ok(res);
     }
-    let res = next.call(req).await?;
-    Ok(res)
+    Err(actix_web::error::ErrorUnauthorized("Unauthorized."))
 }

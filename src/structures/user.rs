@@ -2,7 +2,7 @@
 use crate::{structures::base::Fields, utils::Snowflake};
 use sqlx::FromRow;
 
-#[derive(sqlx::Type, Debug, Default)]
+#[derive(sqlx::Type, Debug, Default, PartialEq, Serialize)]
 #[sqlx(type_name = "roles_enum", rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum UserRoles {
     #[default]
@@ -11,7 +11,7 @@ pub enum UserRoles {
     Admin,
 }
 
-#[derive(FromRow, Debug, Default)]
+#[derive(FromRow, Debug, Default, Serialize)]
 pub struct User {
     pub id: Snowflake,
     pub username: String,

@@ -1,5 +1,5 @@
-use crate::POOL;
 use crate::utils::Snowflake;
+use crate::POOL;
 use async_trait::async_trait;
 use sqlx::postgres::{PgDatabaseError, PgRow};
 use sqlx::Encode;
@@ -38,7 +38,9 @@ where
 {
     fn fields(&self) -> Fields;
     fn table_name() -> &'static str;
-
+    fn primary_key() -> &'static str {
+        "id"
+    }
     fn pool() -> &'static Pool<Postgres> {
         POOL.get().unwrap()
     }
@@ -114,6 +116,30 @@ where
         Ok(data)
     }
     async fn find_by_id(id: Snowflake) -> Result<Self, sqlx::Error> {
-        Self::find_one("WHERE id = $1", vec![id]).await
+        Self::find_one("WHERE id = $1", vec![id.to_string()]).await
+    }
+    async fn update(&self) -> Result<(), sqlx::Error> {
+        let fields = self.fields();
+        let columns = fields.cols;
+        let args = fields.args;
+        let mut args_placeholders = vec![];
+
+        let mut i = 1;
+
+        for col in columns {
+            args_placeholders.push(format!("{col} = ${i}"));
+            i += 1;
+        }
+        let query = format!(
+            "UPDATE {} SET {} WHERE {} = $1",
+            Self::table_name(),
+            args_placeholders.join(","),
+            Self::primary_key()
+        );
+        println!("{query}");
+
+        sqlx::query_with(&query, args).execute(Self::pool()).await?;
+
+        Ok(())
     }
 }

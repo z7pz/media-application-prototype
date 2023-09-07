@@ -6,20 +6,21 @@ use sqlx::FromRow;
 
 
 
-#[derive(FromRow, Debug, Default)]
+#[derive(FromRow, Debug, Default, Serialize)]
 pub struct Grade {
 	pub id: Snowflake,
     pub user_id: Snowflake,
-	pub grade: i8,
+	pub grade: i32,
 	pub paper: String,
 }
 impl Grade {
     pub fn new(
         user_id: Snowflake,
-		grade: i8,
+		grade: i32,
     ) -> Self {
         Grade {
             user_id,
+            grade,
 			..Default::default()
         }
     }
