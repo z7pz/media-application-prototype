@@ -4,15 +4,15 @@ use crate::{structures::base::Fields, utils::Snowflake};
 use nanoid::nanoid;
 use sqlx::FromRow;
 
-#[derive(FromRow, Debug, Default)]
+#[derive(FromRow, Debug, Default, Serialize)]
 pub struct Exam {
     pub id: Snowflake,
     pub name: String,
-    pub outof: i8,
+    pub outof: i32,
     pub grades: Vec<Snowflake>,
 }
 impl Exam {
-    pub fn new(name: String, outof: i8) -> Self {
+    pub fn new(name: String, outof: i32) -> Self {
         Exam {
             name,
             outof,
@@ -29,7 +29,7 @@ impl Base for Exam {
         fields.add("outof", &self.outof);
         fields.add("grades", &self.grades);
         return fields;
-    }
+    }   
 
     fn table_name() -> &'static str {
         "exams"
