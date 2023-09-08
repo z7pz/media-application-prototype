@@ -83,7 +83,7 @@ where
             .await?;
         Ok(data)
     }
-
+    fn id(&self) -> Snowflake;
     async fn find_all() -> anyhow::Result<Vec<Self>> {
         let query = f!("SELECT * FROM {}", Self::table_name());
         let data = sqlx::query_as::<_, Self>(query.as_str())
@@ -116,7 +116,7 @@ where
         Ok(data)
     }
     async fn find_by_id(id: Snowflake) -> Result<Self, sqlx::Error> {
-        Self::find_one("WHERE id = $1", vec![id.to_string()]).await
+        Self::find_one("id = $1", vec![id]).await
     }
     async fn update(&self) -> Result<(), sqlx::Error> {
         let fields = self.fields();
@@ -142,4 +142,16 @@ where
 
         Ok(())
     }
+    async fn delete(self) -> Result<(), sqlx::Error> {
+        sqlx::query(&format!(
+            "DELETE FROM {} WHERE {} = {}",
+            Self::table_name(),
+            Self::primary_key(),
+            self.id().to_string()
+        ))
+        .execute(Self::pool())
+        .await
+        .map(|_| ())
+    }
+
 }

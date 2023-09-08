@@ -34,4 +34,8 @@ impl Base for Exam {
     fn table_name() -> &'static str {
         "exams"
     }
+
+    fn id(&self) -> Snowflake {
+        self.id
+    }
 }

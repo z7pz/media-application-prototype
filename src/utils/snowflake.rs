@@ -16,7 +16,7 @@ lazy_static! {
 }
 
 #[serde_as]
-#[derive(Type,Serialize, Deserialize, Clone, Copy, PartialEq, Eq, Debug, Hash)]
+#[derive(Ord, PartialOrd, Type,Serialize, Deserialize, Clone, Copy, PartialEq, Eq, Debug, Hash)]
 #[sqlx(transparent)]
 pub struct Snowflake(#[serde_as(as = "serde_with::DisplayFromStr")] pub i64);
 

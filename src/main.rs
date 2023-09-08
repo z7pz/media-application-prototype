@@ -1,5 +1,3 @@
-#![feature(io_error_other)]
-
 #[macro_use]
 extern crate lazy_static;
 #[macro_use]
@@ -7,11 +5,13 @@ extern crate serde_with;
 #[macro_use]
 extern crate actix_web;
 
+use rayon::prelude::*;
+
 use actix_web_lab::middleware::{from_fn, Next};
 
 use actix_web::{
     body::MessageBody,
-    dev::{Service, ServiceRequest, ServiceResponse},
+    dev::{ServiceRequest, ServiceResponse},
     web, App, Error, HttpServer,
 };
 use sqlx::{Pool, Postgres};
@@ -23,17 +23,20 @@ mod appstate;
 mod routes;
 mod structures;
 mod utils;
+
 static POOL: std::sync::OnceLock<Pool<Postgres>> = std::sync::OnceLock::new();
 
 #[tokio::main]
 async fn main() -> Result<(), std::io::Error> {
     // std::env::set_var("RUST_LOG", "debug");
-    env_logger::init();
+    // env_logger::init();
+    dotenv::dotenv().ok();
+    let db_url = std::env::var("DB_URL").expect("$DB_URL is not set");
     let options = sqlx::postgres::PgPoolOptions::new()
         .max_lifetime(None)
         .idle_timeout(None);
     let pool = options
-        .connect("postgres://postgres:postgres@localhost/idk")
+        .connect(&db_url)
         .await
         .expect("couldn't connect to database!");
     sqlx::migrate!("db/migrations")
@@ -52,7 +55,8 @@ async fn main() -> Result<(), std::io::Error> {
                     .wrap(from_fn(authorization))
                     .service(create_exam)
                     .service(get_exams)
-                    .service(add_grade),
+                    .service(add_grade)
+                    .service(delete_grade),
             )
             .service(
                 web::scope("/user")

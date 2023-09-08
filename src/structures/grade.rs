@@ -6,7 +6,7 @@ use sqlx::FromRow;
 
 
 
-#[derive(FromRow, Debug, Default, Serialize)]
+#[derive(FromRow, Debug, Default, Serialize, Deserialize)]
 pub struct Grade {
 	pub id: Snowflake,
     pub user_id: Snowflake,
@@ -38,5 +38,8 @@ impl Base for Grade {
 
     fn table_name() -> &'static str {
         "grades"
+    }
+    fn id(&self) -> Snowflake {
+        self.id
     }
 }

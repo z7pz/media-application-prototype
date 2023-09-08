@@ -33,4 +33,7 @@ impl Base for Session {
     fn table_name() -> &'static str {
         "sessions"
     }
+    fn id(&self) -> Snowflake {
+        self.id
+    }
 }

@@ -48,4 +48,7 @@ impl Base for User {
     fn table_name() -> &'static str {
         "users"
     }
+    fn id(&self) -> Snowflake {
+        self.id
+    }
 }
