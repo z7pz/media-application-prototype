@@ -10,17 +10,20 @@ use sqlx::FromRow;
 pub struct Grade {
 	pub id: Snowflake,
     pub user_id: Snowflake,
+    pub exam_id: Snowflake,
 	pub grade: i32,
 	pub paper: String,
 }
 impl Grade {
     pub fn new(
         user_id: Snowflake,
+        exam_id: Snowflake,
 		grade: i32,
     ) -> Self {
         Grade {
             user_id,
             grade,
+            exam_id,
 			..Default::default()
         }
     }
@@ -31,6 +34,7 @@ impl Base for Grade {
         let mut fields = Fields::default();
         fields.add("id", &self.id);
         fields.add("user_id", &self.user_id);
+        fields.add("exam_id", &self.exam_id);
         fields.add("grade", &self.grade);
         fields.add("paper", &self.paper);
         return fields;

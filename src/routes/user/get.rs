@@ -30,10 +30,13 @@ pub async fn get_user(req: HttpRequest) -> Result<impl Responder, Error> {
         .await
         .unwrap();
 
+        let grades = id.grades().await.unwrap_or(Default::default());
+
     Ok(actix_web::web::Json(json!({
         "display_name": display_name,
         "id": id,
         "username": username,
-        "role": role
+        "role": role,
+        "grades": grades
     })))
 }

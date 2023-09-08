@@ -6,7 +6,7 @@ use sqlx::postgres::{PgHasArrayType, PgTypeInfo};
 use sqlx::Type;
 use std::sync::Mutex;
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
-use crate::structures::{Session, User, Base};
+use crate::structures::{Session, User, Base, Grade};
 
 lazy_static! {
     // Fri, 01 Jan 2021 00:00:00 GMT
@@ -80,6 +80,9 @@ pub trait Ref {
 
     async fn user(&self) -> Result<User, sqlx::Error> {
         User::find_by_id(self.id()).await
+    }
+    async fn grades(&self) -> Result<Vec<Grade>, sqlx::Error> {
+        Grade::find("user_id = $1", vec![self.id()]).await
     }
     async fn session(&self, user_id: Snowflake) -> Result<Session, sqlx::Error> {
         Session::find_one("id = $1 AND user_id = $2", vec![self.id(), user_id]).await

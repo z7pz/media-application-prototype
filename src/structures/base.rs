@@ -71,7 +71,7 @@ where
     >(
         filter: T,
         vec: Vec<V>,
-    ) -> anyhow::Result<Vec<Self>> {
+    ) -> Result<Vec<Self>, sqlx::error::Error> {
         let filter: String = filter.into();
         let query = f!("SELECT * FROM {} WHERE {}", Self::table_name(), filter);
         let mut args = PgArguments::default();

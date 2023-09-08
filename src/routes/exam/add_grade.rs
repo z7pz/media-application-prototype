@@ -31,7 +31,7 @@ async fn add_grade(req_body: String, req: HttpRequest) -> Result<impl Responder,
             let mut exam = Exam::find_one("id = $1", vec![json.exam_id])
                 .await
                 .map_err(|_| actix_web::error::ErrorNotFound("Exam not found"))?;
-            let grade = Grade::new(json.user_id, json.grade);
+            let grade = Grade::new(json.user_id, exam.id, json.grade);
             grade.insert().await.unwrap();
             exam.grades.push(grade.id);
 			println!("updating...");

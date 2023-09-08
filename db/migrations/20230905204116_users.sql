@@ -13,14 +13,6 @@ CREATE TABLE IF NOT EXISTS sessions (
     user_id BIGINT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
-create table if NOT exists grades (
-    id BIGINT PRIMARY KEY,
-    user_id BIGINT NOT NULL,
-    grade INT not null,
-    paper text not null,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-);
-
 
 create table if NOT exists exams (
     id BIGINT PRIMARY KEY,
@@ -28,3 +20,15 @@ create table if NOT exists exams (
     outof INT not null,
     grades BIGINT[] not null
 );
+
+create table if NOT exists grades (
+    id BIGINT PRIMARY KEY,
+    exam_id BIGINT not null,
+    user_id BIGINT NOT NULL,
+    grade INT not null,
+    paper text not null,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (exam_id) REFERENCES exams(id) ON DELETE CASCADE
+);
+
+
