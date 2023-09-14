@@ -6,7 +6,7 @@ use sqlx::FromRow;
 
 
 
-#[derive(FromRow, Debug, Default, Serialize, Deserialize)]
+#[derive(FromRow, Debug, Default, Serialize, Deserialize, Clone)]
 pub struct Grade {
 	pub id: Snowflake,
     pub user_id: Snowflake,
@@ -20,7 +20,7 @@ impl Grade {
         exam_id: Snowflake,
 		grade: i32,
     ) -> Self {
-        Grade {
+        Self {
             user_id,
             grade,
             exam_id,

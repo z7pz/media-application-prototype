@@ -56,12 +56,16 @@ async fn main() -> Result<(), std::io::Error> {
                     .service(create_exam)
                     .service(get_exams)
                     .service(add_grade)
-                    .service(delete_grade),
+                    .service(delete_grade)
+                    .service(edit_exam)
+                    .service(get_grades)
+                    .service(edit_grades),
             )
             .service(
                 web::scope("/user")
-                .wrap(from_fn(authorization))
-                .service(get_user)
+                    .wrap(from_fn(authorization))
+                    .service(get_user)
+                    .service(get_users)
             )
     })
     .bind(("127.0.0.1", 8080))?
