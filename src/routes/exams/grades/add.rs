@@ -2,7 +2,7 @@ use actix_web::{Error, HttpRequest, Responder};
 
 use crate::{
     structures::{Base, Exam, Grade, Session, User, UserRoles},
-    utils::{Ref, Snowflake},
+    utils::snowflake::{Ref, Snowflake},
 };
 
 #[derive(Deserialize)]
@@ -13,8 +13,8 @@ struct AddGradeReq {
     paper: String,
 }
 
-#[post("/add_grade")]
-async fn add_grade(req_body: String, req: HttpRequest) -> Result<impl Responder, Error> {
+#[post("/add")]
+ async fn add(req_body: String, req: HttpRequest) -> Result<impl Responder, Error> {
     let json: AddGradeReq = serde_json::from_str(&req_body)?;
     let session_id = req
         .headers()

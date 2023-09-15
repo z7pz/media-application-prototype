@@ -1,6 +1,6 @@
 use std::default;
 
-use crate::{structures::base::Fields, utils::Snowflake};
+use crate::{structures::base::Fields, utils::snowflake::Snowflake};
 use nanoid::nanoid;
 use sqlx::FromRow;
 #[derive(FromRow, Debug)]

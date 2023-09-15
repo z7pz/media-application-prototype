@@ -2,7 +2,7 @@ use actix_web::{Error, Responder};
 
 use crate::{
     structures::{Base, Exam, Grade},
-    utils::{Ref, Snowflake},
+    utils::snowflake::{Ref, Snowflake},
 };
 
 #[derive(Deserialize)]
@@ -18,8 +18,8 @@ struct EditGradeRequest {
     exam_id: Snowflake,
 }
 
-#[post("/edit_grades")]
-async fn edit_grades(req_body: String) -> Result<impl Responder, Error> {
+#[post("/edit")]
+async fn edit(req_body: String) -> Result<impl Responder, Error> {
     let json: EditGradeRequest = serde_json::from_str(&req_body)?;
     let mut grades = json
         .exam_id

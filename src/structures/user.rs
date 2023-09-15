@@ -1,5 +1,5 @@
 
-use crate::{structures::base::Fields, utils::Snowflake};
+use crate::{structures::base::Fields, utils::snowflake::Snowflake};
 use sqlx::FromRow;
 
 #[derive(sqlx::Type, Debug, Default, PartialEq, Serialize)]

@@ -2,7 +2,7 @@ use actix_web::{Error, Responder};
 
 use crate::{
     structures::{Base, Exam, Grade},
-    utils::Snowflake,
+    utils::snowflake::Snowflake,
 };
 #[derive(Deserialize)]
 struct EditGrade {
@@ -19,7 +19,7 @@ struct EditRequest {
 }
 
 #[post("/edit")]
-async fn edit_exam(req_body: String) -> Result<impl Responder, Error> {
+async fn edit(req_body: String) -> Result<impl Responder, Error> {
     let EditRequest { id, name, outof } = serde_json::from_str(&req_body)?;
     let mut exam = Exam::find_by_id(id).await.expect("something went wrong");
     exam.name = name;

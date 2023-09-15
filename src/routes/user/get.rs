@@ -1,14 +1,13 @@
 use actix_web::{Error, HttpRequest, Responder};
 use serde_json::json;
-use serde_json::Value;
 
 use crate::{
     structures::{Base, Session, User},
-    utils::Ref,
+    utils::snowflake::Ref,
 };
 
-#[get("/get")]
-pub async fn get_user(req: HttpRequest) -> Result<impl Responder, Error> {
+#[get("/@me")]
+pub async fn me(req: HttpRequest) -> Result<impl Responder, Error> {
     let session_id = req
         .headers()
         .get("Authorization")

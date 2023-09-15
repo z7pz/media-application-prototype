@@ -2,7 +2,7 @@ use actix_web::{Error, HttpRequest, Responder};
 
 use crate::{
     structures::{Base, Exam, Session, User, UserRoles},
-    utils::Snowflake,
+    utils::snowflake::Snowflake,
 };
 
 #[derive(Deserialize)]
@@ -11,8 +11,8 @@ struct AddGradeReq {
     grade_id: Snowflake,
 }
 
-#[delete("/delete_grade")]
-async fn delete_grade(req_body: String, req: HttpRequest) -> Result<impl Responder, Error> {
+#[delete("/delete")]
+async fn delete(req_body: String, req: HttpRequest) -> Result<impl Responder, Error> {
     let json: AddGradeReq = serde_json::from_str(&req_body)?;
     let session_id = req
         .headers()

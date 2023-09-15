@@ -8,7 +8,7 @@ struct CreateExamRequest {
 }
 
 #[post("/create")]
-async fn create_exam(req_body: String) -> Result<String, Error> {
+async fn create(req_body: String) -> Result<String, Error> {
     let json: CreateExamRequest = serde_json::from_str(&req_body)?;
     let exam = Exam::new(json.name, json.outof);
     exam.insert()
