@@ -1,4 +1,10 @@
 mod login;
-pub use login::*;
+use login::*;
 mod register;
-pub use register::*;
+use register::*;
+
+use actix_web::{web::*, Scope};
+
+pub fn init() -> Scope {
+    scope("/auth").service(login).service(register)
+}

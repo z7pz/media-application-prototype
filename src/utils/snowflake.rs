@@ -1,3 +1,4 @@
+use crate::structures::{Base, Exam, Grade, Session, User};
 use async_trait::async_trait;
 use chrono::{DateTime, TimeZone, Utc};
 use serde::{Deserialize, Serialize};
@@ -6,7 +7,6 @@ use sqlx::postgres::{PgHasArrayType, PgTypeInfo};
 use sqlx::Type;
 use std::sync::Mutex;
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
-use crate::structures::{Session, User, Base, Grade, Exam};
 
 lazy_static! {
     // Fri, 01 Jan 2021 00:00:00 GMT
@@ -16,7 +16,9 @@ lazy_static! {
 }
 
 #[serde_as]
-#[derive(Ord, PartialOrd, Type,Serialize, Deserialize, Clone, Copy, PartialEq, Eq, Debug, Hash)]
+#[derive(
+    Ord, PartialOrd, Type, Serialize, Deserialize, Clone, Copy, PartialEq, Eq, Debug, Hash,
+)]
 #[sqlx(transparent)]
 pub struct Snowflake(#[serde_as(as = "serde_with::DisplayFromStr")] pub i64);
 
@@ -34,7 +36,6 @@ impl Snowflake {
             .unwrap()
     }
 }
-
 
 impl Default for Snowflake {
     fn default() -> Self {

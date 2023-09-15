@@ -1,12 +1,7 @@
 mod get;
+use actix_web::{web::*, Scope};
 use get::*;
-mod users {
-    use super::*;
-    use actix_web::{web::*, Scope};
 
-    pub fn init() -> Scope {
-        scope("/users").service(all)
-    }
+pub fn init() -> Scope {
+    scope("/users").service(all)
 }
-
-pub use users::*;

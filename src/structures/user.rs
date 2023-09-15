@@ -1,4 +1,3 @@
-
 use crate::{structures::base::Fields, utils::snowflake::Snowflake};
 use sqlx::FromRow;
 

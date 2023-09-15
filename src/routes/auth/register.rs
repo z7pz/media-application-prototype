@@ -1,6 +1,6 @@
 use actix_web::Error;
 
-use crate::structures::{User, Base};
+use crate::structures::{Base, User};
 
 #[derive(Deserialize)]
 struct RegisterReq {

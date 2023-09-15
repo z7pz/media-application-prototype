@@ -5,14 +5,12 @@ use nanoid::nanoid;
 use sqlx::FromRow;
 #[derive(FromRow, Debug)]
 pub struct Session {
-	pub id: Snowflake,
+    pub id: Snowflake,
     pub user_id: Snowflake,
-    pub token: String
+    pub token: String,
 }
 impl Session {
-    pub fn new(
-        user_id: Snowflake,
-    ) -> Self {
+    pub fn new(user_id: Snowflake) -> Self {
         Session {
             id: Snowflake::generate(),
             token: nanoid!(64),

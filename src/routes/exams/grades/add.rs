@@ -14,7 +14,7 @@ struct AddGradeReq {
 }
 
 #[post("/add")]
- async fn add(req_body: String, req: HttpRequest) -> Result<impl Responder, Error> {
+async fn add(req_body: String, req: HttpRequest) -> Result<impl Responder, Error> {
     let json: AddGradeReq = serde_json::from_str(&req_body)?;
     let session_id = req
         .headers()

@@ -14,5 +14,5 @@ async fn create(req_body: String) -> Result<String, Error> {
     exam.insert()
         .await
         .map_err(|res| actix_web::error::ErrorInternalServerError(res))?;
-	Ok(exam.id.to_string())
+    Ok(exam.id.to_string())
 }

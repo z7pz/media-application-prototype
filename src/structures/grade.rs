@@ -4,27 +4,21 @@ use crate::{structures::base::Fields, utils::snowflake::Snowflake};
 use nanoid::nanoid;
 use sqlx::FromRow;
 
-
-
 #[derive(FromRow, Debug, Default, Serialize, Deserialize, Clone)]
 pub struct Grade {
-	pub id: Snowflake,
+    pub id: Snowflake,
     pub user_id: Snowflake,
     pub exam_id: Snowflake,
-	pub grade: i32,
-	pub paper: String,
+    pub grade: i32,
+    pub paper: String,
 }
 impl Grade {
-    pub fn new(
-        user_id: Snowflake,
-        exam_id: Snowflake,
-		grade: i32,
-    ) -> Self {
+    pub fn new(user_id: Snowflake, exam_id: Snowflake, grade: i32) -> Self {
         Self {
             user_id,
             grade,
             exam_id,
-			..Default::default()
+            ..Default::default()
         }
     }
 }

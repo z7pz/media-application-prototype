@@ -29,7 +29,7 @@ impl Base for Exam {
         fields.add("outof", &self.outof);
         fields.add("grades", &self.grades);
         return fields;
-    }   
+    }
 
     fn table_name() -> &'static str {
         "exams"

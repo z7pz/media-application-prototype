@@ -1,7 +1,11 @@
-use actix_web::{dev::{ServiceRequest, ServiceResponse}, body::MessageBody, Error};
+use actix_web::{
+    body::MessageBody,
+    dev::{ServiceRequest, ServiceResponse},
+    Error,
+};
 use actix_web_lab::middleware::Next;
 
-use crate::structures::{Session, Base};
+use crate::structures::{Base, Session};
 
 pub async fn authorization(
     req: ServiceRequest,

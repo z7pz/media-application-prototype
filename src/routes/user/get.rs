@@ -29,7 +29,7 @@ pub async fn me(req: HttpRequest) -> Result<impl Responder, Error> {
         .await
         .unwrap();
 
-        let grades = id.grades_by_userid().await.unwrap_or(Default::default());
+    let grades = id.grades_by_userid().await.unwrap_or(Default::default());
 
     Ok(actix_web::web::Json(json!({
         "display_name": display_name,

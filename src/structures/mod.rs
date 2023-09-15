@@ -1,10 +1,10 @@
 mod base;
-mod user;
-mod session;
 mod exam;
 mod grade;
+mod session;
+mod user;
+pub use base::*;
+pub use exam::*;
 pub use grade::*;
 pub use session::*;
-pub use exam::*;
 pub use user::*;
-pub use base::*;

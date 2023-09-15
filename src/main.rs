@@ -29,13 +29,9 @@ async fn main() -> Result<(), std::io::Error> {
         use routes::*;
         App::new()
             .app_data(web::Data::new(appstate::new()))
-            .service(web::scope("/auth").service(login).service(register))
+            .service(auth::init())
             .service(exams::init())
-            .service(
-                web::scope("/user")
-                    .wrap(from_fn(middlewares::authorization))
-                    .service(user::init()),
-            )
+            .service(user::init())
     })
     .bind(("127.0.0.1", 8080))?
     .run()
