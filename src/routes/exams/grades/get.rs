@@ -7,6 +7,7 @@ use crate::{
     utils::snowflake::{Ref, Snowflake},
 };
 
+use serde::Deserialize;
 #[derive(Deserialize)]
 struct GetGradesRequest {
     exam_id: Snowflake,

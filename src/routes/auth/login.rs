@@ -1,7 +1,7 @@
 use actix_web::Error;
 
 use crate::structures::{Base, Session, User};
-
+use serde::Deserialize;
 #[derive(Deserialize)]
 struct LoginReq {
     username: String,

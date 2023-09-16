@@ -25,7 +25,7 @@ impl Base for Session {
         fields.add("id", &self.id);
         fields.add("user_id", &self.user_id);
         fields.add("token", &self.token);
-        return fields;
+        fields
     }
 
     fn table_name() -> &'static str {

@@ -2,6 +2,7 @@ use std::default;
 
 use crate::{structures::base::Fields, utils::snowflake::Snowflake};
 use nanoid::nanoid;
+use serde::{Deserialize, Serialize};
 use sqlx::FromRow;
 
 #[derive(FromRow, Debug, Default, Serialize, Deserialize, Clone)]
@@ -31,7 +32,7 @@ impl Base for Grade {
         fields.add("exam_id", &self.exam_id);
         fields.add("grade", &self.grade);
         fields.add("paper", &self.paper);
-        return fields;
+        fields
     }
 
     fn table_name() -> &'static str {

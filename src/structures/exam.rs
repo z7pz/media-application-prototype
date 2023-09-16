@@ -2,6 +2,7 @@ use std::default;
 
 use crate::{structures::base::Fields, utils::snowflake::Snowflake};
 use nanoid::nanoid;
+use serde::Serialize;
 use sqlx::FromRow;
 
 #[derive(FromRow, Debug, Default, Serialize)]
@@ -28,7 +29,7 @@ impl Base for Exam {
         fields.add("name", &self.name);
         fields.add("outof", &self.outof);
         fields.add("grades", &self.grades);
-        return fields;
+        fields
     }
 
     fn table_name() -> &'static str {

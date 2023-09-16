@@ -1,4 +1,5 @@
 use crate::{structures::base::Fields, utils::snowflake::Snowflake};
+use serde::Serialize;
 use sqlx::FromRow;
 
 #[derive(sqlx::Type, Debug, Default, PartialEq, Serialize)]
@@ -41,7 +42,7 @@ impl Base for User {
         fields.add("username", &self.username);
         fields.add("password_hash", &self.password_hash);
         fields.add("role", &self.role);
-        return fields;
+        fields
     }
 
     fn table_name() -> &'static str {

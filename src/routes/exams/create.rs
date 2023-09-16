@@ -1,5 +1,6 @@
 use crate::structures::*;
 use actix_web::Error;
+use serde::Deserialize;
 
 #[derive(Deserialize)]
 struct CreateExamRequest {

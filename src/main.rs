@@ -5,8 +5,6 @@ extern crate serde_with;
 #[macro_use]
 extern crate actix_web;
 
-use actix_web_lab::middleware::from_fn;
-
 use actix_web::{web, App, HttpServer};
 use sqlx::{Pool, Postgres};
 
@@ -18,11 +16,14 @@ pub mod routes;
 pub mod structures;
 pub mod utils;
 pub use config::*;
+mod error;
+mod prelude;
 
+pub use prelude::*;
 static POOL: std::sync::OnceLock<Pool<Postgres>> = std::sync::OnceLock::new();
 
 #[tokio::main]
-async fn main() -> Result<(), std::io::Error> {
+async fn main() -> Result<()> {
     dotenv::dotenv().ok();
     database::init_db().await;
     HttpServer::new(move || {
@@ -35,5 +36,6 @@ async fn main() -> Result<(), std::io::Error> {
     })
     .bind(("127.0.0.1", 8080))?
     .run()
-    .await
+    .await?;
+    Ok(())
 }

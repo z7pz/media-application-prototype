@@ -4,6 +4,7 @@ use crate::{
     structures::{Base, Exam, Grade, Session, User, UserRoles},
     utils::snowflake::{Ref, Snowflake},
 };
+use serde::Deserialize;
 
 #[derive(Deserialize)]
 struct AddGradeReq {
