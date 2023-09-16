@@ -2,7 +2,7 @@ use actix_web::{Error, Responder};
 use serde::Deserialize;
 
 use crate::{
-    structures::{Base, Exam, Grade},
+    structures::{Base, Exam},
     utils::snowflake::Snowflake,
 };
 #[derive(Deserialize)]

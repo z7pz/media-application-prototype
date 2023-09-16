@@ -1,7 +1,7 @@
-use std::default;
+
 
 use crate::{structures::base::Fields, utils::snowflake::Snowflake};
-use nanoid::nanoid;
+
 use serde::{Deserialize, Serialize};
 use sqlx::FromRow;
 
@@ -27,10 +27,10 @@ use super::base::Base;
 impl Base for Grade {
     fn fields(&self) -> Fields {
         let mut fields = Fields::default();
-        fields.add("id", &self.id);
-        fields.add("user_id", &self.user_id);
-        fields.add("exam_id", &self.exam_id);
-        fields.add("grade", &self.grade);
+        fields.add("id", self.id);
+        fields.add("user_id", self.user_id);
+        fields.add("exam_id", self.exam_id);
+        fields.add("grade", self.grade);
         fields.add("paper", &self.paper);
         fields
     }

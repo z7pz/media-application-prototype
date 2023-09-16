@@ -6,7 +6,7 @@ pub async fn init_db() {
         .idle_timeout(None);
 
     let pool = options
-        .connect(&*DB_URL) // give refrence of value inside DB_URL
+        .connect(&DB_URL) 
         .await
         .expect("couldn't connect to database!");
     sqlx::migrate!("db/migrations")

@@ -37,7 +37,7 @@ use super::base::Base;
 impl Base for User {
     fn fields(&self) -> Fields {
         let mut fields = Fields::default();
-        fields.add("id", &self.id);
+        fields.add("id", self.id);
         fields.add("display_name", &self.display_name);
         fields.add("username", &self.username);
         fields.add("password_hash", &self.password_hash);

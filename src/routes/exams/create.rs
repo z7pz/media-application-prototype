@@ -14,6 +14,6 @@ async fn create(req_body: String) -> Result<String, Error> {
     let exam = Exam::new(json.name, json.outof);
     exam.insert()
         .await
-        .map_err(|res| actix_web::error::ErrorInternalServerError(res))?;
+        .map_err(actix_web::error::ErrorInternalServerError)?;
     Ok(exam.id.to_string())
 }

@@ -1,4 +1,4 @@
-use std::default;
+
 
 use crate::{structures::base::Fields, utils::snowflake::Snowflake};
 use nanoid::nanoid;
@@ -22,8 +22,8 @@ use super::base::Base;
 impl Base for Session {
     fn fields(&self) -> Fields {
         let mut fields = Fields::default();
-        fields.add("id", &self.id);
-        fields.add("user_id", &self.user_id);
+        fields.add("id", self.id);
+        fields.add("user_id", self.user_id);
         fields.add("token", &self.token);
         fields
     }

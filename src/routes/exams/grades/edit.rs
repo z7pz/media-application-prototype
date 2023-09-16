@@ -1,7 +1,7 @@
 use actix_web::{Error, Responder};
 
 use crate::{
-    structures::{Base, Exam, Grade},
+    structures::{Base},
     utils::snowflake::{Ref, Snowflake},
 };
 use serde::Deserialize;

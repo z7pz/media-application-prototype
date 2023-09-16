@@ -3,7 +3,7 @@ use async_trait::async_trait;
 use chrono::{DateTime, TimeZone, Utc};
 use serde::{Deserialize, Serialize};
 use snowflake::SnowflakeIdGenerator;
-use sqlx::postgres::{PgHasArrayType, PgTypeInfo};
+
 use sqlx::Type;
 use std::sync::Mutex;
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
