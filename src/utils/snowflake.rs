@@ -1,3 +1,4 @@
+use crate::prelude::{*};
 use crate::structures::{Base, Exam, Grade, Session, User};
 use async_trait::async_trait;
 use chrono::{DateTime, TimeZone, Utc};
@@ -68,10 +69,10 @@ impl std::ops::Deref for Snowflake {
 // }
 
 impl TryFrom<String> for Snowflake {
-    type Error = std::num::ParseIntError;
+    type Error = Error;
 
-    fn try_from(value: String) -> Result<Self, Self::Error> {
-        Ok(Snowflake(value.parse()?))
+    fn try_from(value: String) -> Result<Self> {
+        Ok(Snowflake(value.parse().map_err(|c| c)?))
     }
 }
 
@@ -79,22 +80,22 @@ impl TryFrom<String> for Snowflake {
 pub trait Ref {
     fn id(&self) -> Snowflake;
 
-    async fn user(&self) -> Result<User, sqlx::Error> {
+    async fn user(&self) -> Result<User> {
         User::find_by_id(self.id()).await
     }
-    async fn exam(&self) -> Result<Exam, sqlx::Error> {
+    async fn exam(&self) -> Result<Exam> {
         Exam::find_by_id(self.id()).await
     }
-    async fn grades_by_userid(&self) -> Result<Vec<Grade>, sqlx::Error> {
+    async fn grades_by_userid(&self) -> Result<Vec<Grade>> {
         Grade::find("user_id = $1", vec![self.id()]).await
     }
-    async fn grades_by_exam(&self) -> Result<Vec<Grade>, sqlx::Error> {
+    async fn grades_by_exam(&self) -> Result<Vec<Grade>> {
         Grade::find("exam_id = $1", vec![self.id()]).await
     }
-    async fn grade(&self) -> Result<Vec<Grade>, sqlx::Error> {
+    async fn grade(&self) -> Result<Vec<Grade>> {
         Grade::find("user_id = $1", vec![self.id()]).await
     }
-    async fn session(&self, user_id: Snowflake) -> Result<Session, sqlx::Error> {
+    async fn session(&self, user_id: Snowflake) -> Result<Session> {
         Session::find_one("id = $1 AND user_id = $2", vec![self.id(), user_id]).await
     }
 }

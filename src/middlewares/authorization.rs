@@ -1,7 +1,7 @@
+use crate::prelude::*;
 use actix_web::{
     body::MessageBody,
     dev::{ServiceRequest, ServiceResponse},
-    Error,
 };
 use actix_web_lab::middleware::Next;
 
@@ -10,7 +10,7 @@ use crate::structures::{Base, Session};
 pub async fn authorization(
     req: ServiceRequest,
     next: Next<impl MessageBody>,
-) -> Result<ServiceResponse<impl MessageBody>, Error> {
+) -> Result<ServiceResponse<impl MessageBody>, actix_web::error::Error> {
     let auth = req.headers().get("Authorization");
     if let Some(session) = auth.map(|c| c.to_str().unwrap()) {
         Session::find_one("token = $1", vec![session])

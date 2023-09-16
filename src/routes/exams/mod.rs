@@ -7,9 +7,10 @@ pub use get::*;
 pub mod grades;
 
 use crate::middlewares;
+use crate::prelude::Error;
 use actix_web::{
     body::MessageBody,
-    dev::{ServiceFactory, ServiceRequest, ServiceResponse},
+    dev::{ServiceFactory, ServiceRequest, ServiceResponse, Transform},
     *,
 };
 use actix_web_lab::middleware::from_fn;
@@ -37,8 +38,9 @@ pub fn init() -> actix_web::Scope<
         InitError = (),
     >,
 > {
+    let f = from_fn(middlewares::authorization);
     web::scope("/exams")
-        .wrap(from_fn(middlewares::authorization))
+        .wrap(f)
         .service(self::exams())
         .service(self::grades())
 }

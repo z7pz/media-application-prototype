@@ -1,3 +1,4 @@
+use crate::prelude::*;
 use crate::utils::snowflake::Snowflake;
 use crate::POOL;
 use async_trait::async_trait;
@@ -45,7 +46,7 @@ where
         POOL.get().unwrap()
     }
 
-    async fn insert(&self) -> Result<(), sqlx::error::Error> {
+    async fn insert(&self) -> Result<()> {
         let fields = self.fields();
         let cols = fields.cols;
         let args = fields.args;
@@ -71,7 +72,7 @@ where
     >(
         filter: T,
         vec: Vec<V>,
-    ) -> Result<Vec<Self>, sqlx::error::Error> {
+    ) -> Result<Vec<Self>> {
         let filter: String = filter.into();
         let query = f!("SELECT * FROM {} WHERE {}", Self::table_name(), filter);
         let mut args = PgArguments::default();
@@ -84,7 +85,7 @@ where
         Ok(data)
     }
     fn id(&self) -> Snowflake;
-    async fn find_all() -> anyhow::Result<Vec<Self>> {
+    async fn find_all() -> Result<Vec<Self>> {
         let query = f!("SELECT * FROM {}", Self::table_name());
         let data = sqlx::query_as::<_, Self>(query.as_str())
             .fetch_all(Self::pool())
@@ -98,7 +99,7 @@ where
     >(
         filter: T,
         vec: Vec<V>,
-    ) -> Result<Self, sqlx::Error> {
+    ) -> Result<Self> {
         let filter: String = filter.into();
         let query = f!(
             "SELECT * FROM {} WHERE {} LIMIT 1",
@@ -115,10 +116,10 @@ where
             .await?;
         Ok(data)
     }
-    async fn find_by_id(id: Snowflake) -> Result<Self, sqlx::Error> {
+    async fn find_by_id(id: Snowflake) -> Result<Self> {
         Self::find_one("id = $1", vec![id]).await
     }
-    async fn update(&self) -> Result<(), sqlx::Error> {
+    async fn update(&self) -> Result<()> {
         let fields = self.fields();
         let columns = fields.cols;
         let args = fields.args;
@@ -142,7 +143,7 @@ where
 
         Ok(())
     }
-    async fn delete(self) -> Result<(), sqlx::Error> {
+    async fn delete(self) -> Result<()> {
         sqlx::query(&format!(
             "DELETE FROM {} WHERE {} = {}",
             Self::table_name(),
@@ -150,7 +151,7 @@ where
             self.id().to_string()
         ))
         .execute(Self::pool())
-        .await
-        .map(|_| ())
+        .await?;
+        Ok(())
     }
 }
