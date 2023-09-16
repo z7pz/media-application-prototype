@@ -2,7 +2,7 @@ use actix_web::{Error, HttpRequest, Responder};
 
 use crate::{
     structures::{Base, Exam, Grade, Session, User, UserRoles},
-    utils::snowflake::{Ref, Snowflake},
+    utils::snowflake::Snowflake,
 };
 use serde::Deserialize;
 
@@ -11,7 +11,7 @@ struct AddGradeReq {
     exam_id: Snowflake,
     user_id: Snowflake,
     mark: i32,
-    paper: String,
+    // paper: String,
 }
 
 #[post("/add")]

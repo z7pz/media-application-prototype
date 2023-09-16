@@ -5,12 +5,6 @@ use crate::{
     structures::{Base, Exam},
     utils::snowflake::Snowflake,
 };
-#[derive(Deserialize)]
-struct EditGrade {
-    pub user_id: Snowflake,
-    pub grade: i32,
-    pub paper: String,
-}
 
 #[derive(Deserialize)]
 struct EditRequest {

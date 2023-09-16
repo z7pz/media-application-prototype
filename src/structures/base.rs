@@ -1,9 +1,9 @@
 use crate::utils::snowflake::Snowflake;
 use crate::POOL;
 use async_trait::async_trait;
-use sqlx::postgres::{PgRow};
+use sqlx::postgres::PgRow;
 use sqlx::Encode;
-use sqlx::{postgres::PgArguments, Arguments, FromRow, Pool, Postgres, Row};
+use sqlx::{postgres::PgArguments, Arguments, FromRow, Pool, Postgres};
 
 #[derive(Default)]
 pub struct Fields {
